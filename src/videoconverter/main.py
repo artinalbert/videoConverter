@@ -2,9 +2,6 @@ from pathlib import Path
 import subprocess
 
 
-
-
-
 def main():
     src_video_path = Path("/Users/artin/Downloads")
     if src_video_path.exists():
@@ -14,15 +11,26 @@ def main():
                 file_name = i.name
                 if not output.exists():
                     output.mkdir()
-                #print(f"ffmpeg -i '{i}' -c:v libx265 -preset veryfast -tag:v hvc1 '{Path(output,file_name)}'")
-                ffmpeg = subprocess.run(["ffmpeg",f"-i '{i}' -c:v libx265 -preset veryfast -tag:v hvc1 '{Path(output,file_name)}'"],check=False,capture_output=True)
+                ffmpeg = subprocess.run(
+                    [
+                        "ffmpeg",
+                        f"-i",
+                        f"{i}",
+                        "-c:v",
+                        "libx265",
+                        "-preset",
+                        "veryfast",
+                        "-tag:v",
+                        "hvc1",
+                        f"{Path(output,file_name)}",
+                    ],
+                    check=False,
+                    capture_output=True,
+                )
                 print(ffmpeg.stdout)
                 print(ffmpeg.stderr)
-                exit()
-
-                
-        
+                # exit()
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     main()
