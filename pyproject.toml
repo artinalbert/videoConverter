@@ -8,6 +8,8 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
+tqdm = "^4.66.2"
+pyobjc-framework-cocoa = "^10.2"
 
 
 [build-system]
