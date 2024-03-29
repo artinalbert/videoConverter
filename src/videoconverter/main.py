@@ -101,6 +101,8 @@ def convert_video(input_file: Path, output_video_path: Path):
         if returncode != 0:
             tqdm.write(additional_output)
             raise subprocess.CalledProcessError(returncode, ffmpeg.args)
+        else:
+            delete_file(input_file)
 
 
 def parse_arguments() -> Namespace:
