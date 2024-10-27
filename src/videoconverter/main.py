@@ -7,15 +7,16 @@ from Foundation import NSFileManager, NSURL
 from argparse import ArgumentParser, Namespace
 import signal
 
-
+# construct default file manager - foundation in MacOS
 file_manager = NSFileManager.defaultManager()
+# an array being created to kkep track of subprocesses
 subprocesses: list[subprocess.Popen] = []
 
-
+# put things in the garbage bin in case conversion goes awry
 def delete_file(file: Path):
     file_url = NSURL.fileURLWithPath_(str(file.resolve()))
     result = file_manager.trashItemAtURL_resultingItemURL_error_(file_url, None, None)
-    if not result[0]:
+    if not result[0]: # if an error occures when trying to remove the file, raise it as a python errro, stopping the program
         raise OSError(result[2].localizedFailureReason())
 
 
@@ -69,11 +70,12 @@ def convert_video(input_file: Path, output_video_path: Path):
                 "ffmpeg",
                 f"-i",
                 f"{input_file}",
-                "-c:v",
-                "libx265",
+                "-c:v", #codec:video
+                # target format for encoding(video)
+                "libx265",#encoder name - codec name: h265
                 "-preset",
                 "veryfast",
-                "-tag:v",
+                "-tag:v", # apple specific tag for indicating that it is an hevc file is(for QuickTime!)
                 "hvc1",
                 f"{Path(output_video_path,file_name)}",
             ],
