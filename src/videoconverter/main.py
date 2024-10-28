@@ -86,16 +86,22 @@ def convert_video(input_file: Path, output_video_path: Path):
         )
         subprocesses.append(ffmpeg)
         while ffmpeg.poll() is None:
+            # we don't want any line breaks in the output
             line = ffmpeg.stderr.readline().replace("\n", "")
             if line.startswith("frame"):
                 pattern = r"(\w+)=\s*(\d+:\d+:\d+\.\d+|\d+\.\d+|\d+)"
                 matches = re.findall(pattern, line)
+                # parse output of ffmpeg - match the pattern above
                 line_info = {
                     key: value if value.isdigit() or "." in value else value
                     for key, value in matches
                 }
-                pbar.n = parse_duration(line_info["time"])
-                pbar.refresh()
+                if "time" in line_info:
+                    pbar.n = parse_duration(line_info["time"])
+                    pbar.refresh()
+                else:
+                    pbar.write("line could not be parsed")
+                    pbar.write(line)
             else:
                 additional_output += line + "\n"
 
